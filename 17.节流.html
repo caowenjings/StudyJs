@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>homework-web</title>
+  <style type="text/css">
+
+  </style>
+</head>
+
+<body>
+
+  <div id="demo">
+    <button id="button">点击我呀！</button>
+  </div>
+</body>
+<script>
+  /*
+   解释：高频事件触发，但在n秒内只会执行第一次，未执行完成过程中触发的忽略。所以节流会稀释函数的执行频率
+   核心：开关锁
+   思路：每次触发事件时都判断当前是否有等待执行的延时函数
+   例如：多次点击按钮提交表单，第一次有效
+  */
+
+  // 节流
+  function throttle(fn, delay) {
+    var timer = null;
+    return function () {
+      if (timer) { return false; }
+      var that = this;
+      var args = arguments;
+      fn.apply(that, args);
+      timer = setTimeout(function () {
+        clearTimeout(timer);
+        timer = null;
+      }, delay || 2000);
+    };
+  }
+  // 使用
+  const handler = throttle(function () {
+    console.log('节流click!');
+  });
+  document.getElementById('button').addEventListener('click', handler);
+
+
+
+
+
+
+
+</script>
+
+</html>

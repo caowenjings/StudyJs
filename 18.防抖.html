@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>homework-web</title>
+  <style type="text/css">
+    p {
+      height: 50px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div id="demo">
+    <button id="button">我有防抖点击我呀！</button>
+    <p> 页面下滚动 </p>
+    <p> 页面下滚动 </p>
+    <p> 页面下滚动 </p>
+    <p> 页面下滚动 </p>
+    <p> 页面下滚动 </p>
+    <p> 页面下滚动 </p>
+    <p> 页面下滚动 </p>
+    <p> 页面下滚动 </p>
+    <p> 页面下滚动 </p>
+    <p> 页面下滚动 </p>
+    <p> 页面下滚动 </p>
+    <p> 页面下滚动 </p>
+    <p> 页面下滚动 </p>
+    <p> 页面下滚动 </p>
+    <p> 页面下滚动 </p>
+    <p> 页面下滚动 </p>
+  </div>
+</body>
+<script>
+  /*
+   解释：触发高频事件后 n秒内只执行最后一个被触发的清除之前的异步任务
+   核心：清零
+   思路：每次触发事件时都取消之前的延时调用方法
+   例如： 页面滚动处理事件，搜索框输入联想最后一次有效
+  */
+  // 防抖
+  function debounce(fn, delay) {
+    var timer = null;
+    return function () {
+      var that = this;
+      var args = arguments;
+      clearTimeout(timer);// 清除重新计时
+      timer = setTimeout(function () {
+        fn.apply(that, args);
+      }, delay || 2000);
+    };
+  }
+
+  // 使用
+  const handler = debounce(function () {
+    console.log('防抖click!');
+  });
+
+  document.getElementById('button').addEventListener('click', handler);
+
+
+
+
+
+
+  function debounce1(fn, wait) {
+    var timeout = null;      //定义一个定时器
+    return function () {
+      if (timeout !== null)
+        clearTimeout(timeout);  //清除这个定时器
+      timeout = setTimeout(fn, wait);
+    }
+  }
+  // 处理函数
+  function handle() {
+    console.log(Math.random());
+  }
+  // 滚动事件
+  window.addEventListener('scroll', debounce1(handle, 1000));
+
+
+
+</script>
+
+</html>
