@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>homework-web</title>
+</head>
+
+<body>
+    <div>
+        <p>999</p>
+    </div>
+    <script>
+        // 1.基本用法 过了指定的时间（ms), Promise实例的状态变为resolved，就会触发then方法绑定的回调函数。
+        function study1() {
+            function basicTimeOut(ms) {
+                return new Promise((resolve, reject) => {
+                    console.log('ok')
+                    setTimeout(resolve, ms, 'doen')
+                })
+            }
+            basicTimeOut(1000).then(res => {
+                console.log(res)
+            })
+        }
+        // study1()
+        /* 2.Promise 新建后就会立即执行, then方法指定的回调函数，将在当前脚本所有同步任务执行完才会执行
+           查看下面的打印顺序 promise hi! resove!
+        */
+
+        function study2() {
+            function basic1() {
+                let p = new Promise((resove, reject) => {
+                    console.log('promise')
+                    resove()
+                })
+                return p
+            }
+            basic1().then(() => {
+                console.log("resove!")
+            })
+            console.log("hi!")
+        }
+        // study2()
+
+        /* 3.两个Promise 但是p2的resolve方法将p1作为参数，这时p1的状态就会传递给p2，即一个异步操作的结果是返回另一个异步操作
+           p1的状态决定了p2的状态。
+           如果p1的状态是pending，那么p2的回调函数就会等待p1的状态改变；
+           如果p1的状态已经是resolved或者rejected，那么p2的回调函数将会立刻执行
+         
+            执行顺序：p1 p2 hahaha resuleerror
+                   p1 p1oooo p2 p2oooo hahaha resuleerror  //调用resolve或reject并不会终结 Promise 的参数函数的执行
+           */
+
+        function study3() {
+            const p1 = new Promise(function (resolve, reject) {
+                console.log("p1")
+                setTimeout(() => reject(new Error('fail')), 3000)
+                console.log("p1 oooo")
+            })
+
+            const p2 = new Promise(function (resolve, reject) {
+                console.log("p2")
+                setTimeout(() => resolve(p1), 1000)
+                console.log("p2 oooo")
+            })
+
+            p2.then(result => {
+                console.log("resule", result)
+            }).catch(error => {
+                console.log("resuleerror", error)
+            })
+
+            console.log('hahahh')
+        }
+        // study3()
+
+        /* 4.调用resolve或reject并不会终结 Promise 的参数函数的执行
+             并且会立即执行 这是因为resolved（） Promise 是在本轮事件循环的末尾执行，总是晚于本轮循环的同步任务
+             下面的执行顺序：2，1
+        */
+        function study4() {
+            new Promise((resolve, reject) => {
+                resolve(1);
+                console.log(2);
+            }).then(r => {
+                console.log(r);
+            });
+
+        }
+        // study4();
+        /* 5.加上return  后面的就不会再执行了
+         下面的执行顺序：3
+       */
+
+        function study5() {
+            new Promise((resolve, reject) => {
+                return resolve(3);
+                // 后面的语句不会执行
+                console.log(4);
+            }).then(r => {
+                console.log(r);
+            });
+        }
+        // study5();
+
+        /* 6.all()
+        下面的执行顺序：1,2 3:hello1,hello  
+                     hello1 hello undefined
+      */
+        function study6() {
+            const p1 = new Promise((resolve, reject) => {
+                console.log(1)
+                resolve('hello');
+            })
+            const p2 = new Promise((resolve, reject) => {
+                console.log(2)
+                resolve('hello1');
+            })
+            Promise.all([p2, p1])
+                .then(result => {
+                    console.log(3, result)
+                    let [res1, res2, res3] = result;
+                    console.log(res1, res2, res3)
+                })
+                .catch(e => {
+                    console.log(4);
+                    console.log(e)
+                })
+        }
+        study6()
+
+        // 练习题
+        // 1.执行顺序 3，7，4，1，2，5 （resolve(6);无效，因为priomsie一经改变就不再变化）
+        function test() {
+            const first = () => (new Promise((resolve, reject) => {
+                console.log(3);
+                let p = new Promise((resolve, reject) => {
+                    console.log(7);
+                    setTimeout(() => {
+                        console.log(5);
+                        resolve(6);
+                    }, 0)
+                    resolve(1);
+                });
+                resolve(2);
+                p.then((arg) => {
+                    console.log(arg);
+                });
+
+            }));
+
+            first().then((arg) => {
+                console.log(arg);
+            });
+            console.log(4);
+        }
+        // test()
+        /*2. promise 有 3 种状态： pending（进行中）、fulfilled（已成功）和rejected（已失败）
+        执行顺序 ：promise1 Promise {<pending>}
+                 promise2 Promise {<pending>}
+
+                 promise.html:142 Uncaught (in promise) Error: error!!!
+
+                 promise1 Promise {<fulfilled>: "success"}
+                 promise2 Promise {<rejected>: Error: error!!!
+                   
+        */
+        function test1() {
+            const promise1 = new Promise((resolve, reject) => {
+                setTimeout(() => {
+                    resolve('success')
+                }, 1000)
+            })
+            const promise2 = promise1.then(() => {
+                throw new Error('error!!!')
+            })
+
+            console.log('promise1', promise1)
+            console.log('promise2', promise2)
+
+            setTimeout(() => {
+                console.log('promise1', promise1)
+                console.log('promise2', promise2)
+            }, 2000)
+        }
+        // test1()
+        /* 3.构造函数中的 resolve 或 reject 只有第一次执行有效，多次调用没有任何作用，呼应代码二结论：promise 状态一旦改变则不能再变。
+           打印顺序：then：success1
+        */
+        function test2() {
+            const promise = new Promise((resolve, reject) => {
+                resolve('success1')
+                reject('error')
+                resolve('success2')
+            })
+
+            promise
+                .then((res) => {
+                    console.log('then: ', res)
+                })
+                .catch((err) => {
+                    console.log('catch: ', err)
+                })
+        }
+        // test2()  打印顺序：catch: error
+        function test22() {
+            const promise = new Promise((resolve, reject) => {
+                // resolve('success1')
+                reject('error')
+                resolve('success2')
+            })
+            promise
+                .then((res) => {
+                    console.log('then: ', res)
+                })
+                .catch((err) => {
+                    console.log('catch: ', err)
+                })
+        }
+        // test22()
+
+
+        /* 4.promise链试调用会等里面的then()执行完，再执行外面的
+           打印顺序：
+        */
+        function test3() {
+            Promise.resolve(1)
+                .then((res) => {
+                    console.log('ok1')
+                    console.log(res)
+                    return 2
+                })
+                .catch((err) => {
+                    console.log('ok1')
+                    return 3
+                })
+                .then((res) => {
+                    console.log('ok')
+                    console.log(res)
+                })
+        }
+        // test3();
+
+        /* 5. promise 的 .then 或者 .catch 可以被调用多次，但这里 Promise 构造函数只执行一次。
+           或者说 promise 内部状态一经改变，并且有了一个值，那么后续每次调用 .then 或者 .catch 都会直接拿到该值。
+           打印顺序： once 
+                    ok：100 105
+                    ok2: 100 101
+                    ok1：105 110
+        */
+        function test4() {
+            const promise = new Promise((resolve, reject) => {
+                setTimeout(() => {
+                    console.log('once')
+                    resolve(100)
+                }, 1000)
+            })
+            promise.then((res) => {
+                console.log('ok', res, res + 5)
+                return res + 5;
+            }).then(res => {
+                console.log('ok1', res, res + 5)
+            })
+
+            promise.then((res) => {
+                console.log('ok2', res, res + 1)
+            })
+        }
+        // test4();
+
+        /*5. then 或者 .catch 中 return 一个 error 对象并不会抛出错误
+          打印顺序：then1:  Error: error!!!
+        */
+        function test5() {
+            Promise.resolve()
+                .then(() => {
+                    return new Error('error!!!')
+                })
+                .then((res) => {
+                    console.log('then1: ', res)
+                })
+                .catch((err) => {
+                    console.log('catch: ', err)
+                })
+        }
+        //test5();
+
+        /*6. Promise 对象的错误具有“冒泡”性质，会一直向后传递，直到被捕获为止。也就是说，错误总是会被下一个catch语句捕获
+         打印顺序：then1:  Error: error!!!
+       */
+        function test6() {
+            Promise.resolve()
+                .then(() => {
+                    console.log('then: ')
+                })
+                .then((res) => {
+                    console.log('then1: ', res)
+                    reject(new Error('test'));
+                })
+                .then((res) => {
+                    console.log('then2: ', res)
+                })
+                .catch((err) => {
+                    console.log('catch: ', err)
+                })
+        }
+        test6();
+
+
+
+
+
+
+
+
+
+
+    </script>
+</body>
+
+</html>

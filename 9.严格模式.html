@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>homework-web</title>
+    <style type="text/css">
+
+    </style>
+</head>
+
+<body>
+
+    <div id="demo">
+        <button>点击</button>
+    </div>
+
+    <script>
+        //严格模式
+        /*
+        es5以后添加的 IE10以上支持严格模式
+        严格模式：在严格的条件运行js代码
+        
+        严格模式对正常的js做了一些更改：
+        1.消除了js语法的一些不合理，不严谨之处，减少了一些怪异行为 （变量没有声明不能使用）
+        2.消除了代码不安全之处，保证代码运行的安全
+        3.提高编译器效率，增加运行速度
+        4. 禁用了一些在未来版本可能使用的语法。比如 保留字作为变量名字：比如class ，export，extends,import,super
+        */
+
+
+        /*
+        严格模式可以分为为脚本开启严格模式 ，为函数开启严格模式
+        */
+        // 1.为脚本开启严格模式 最上面 use strict
+        'use strict'//   下面js代码会按照严格模式执行
+    </script>
+    <script>
+            (function () {
+                'use strict'
+            })()
+    </script>
+
+    <script>
+        //2.为某个函数开启严格模式 ,函数内第一行写'use strict'
+        // 此时只给fn函数添加了严格模式
+        function fn() {
+            'use strict'
+        }
+        function fn1() {
+
+        }
+
+    </script>
+
+
+</body>
+
+</html>

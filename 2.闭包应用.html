@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>homework-web</title>
+    <style type="text/css">
+
+    </style>
+</head>
+
+<body>
+
+    <div id="demo">
+
+    </div>
+
+    <script>
+        // 1.类设置私有属性
+        function Person(param) {
+            var name = param.name; // 私有属性
+            this.age = 18; // 共有属性
+
+            this.sayName = function () {
+                console.log(name);
+            }
+            this.sayAge = function () {
+                console.log(this.age);
+            }
+        }
+
+        const tom = new Person({ name: 'tom' });
+        tom.age += 1; // 共有属性，外部可以更改
+        tom.sayName(); // tom
+        tom.sayAge();
+        tom.name = 'jerry';// 共有属性，外部不可更改
+        tom.sayName(); // tom
+
+        // 2. 计算缓存 平方计算
+        var square = (function () {
+            var cache = {};
+            return function (n) {
+                if (!cache[n]) {
+                    cache[n] = n * n;
+                }
+                return cache[n];
+            }
+        })();
+        console.log(square(3))
+
+        //3.
+
+
+
+    </script>
+</body>
+
+</html>

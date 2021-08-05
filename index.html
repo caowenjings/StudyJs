@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>homework-web</title>
+</head>
+
+<body>
+    <div>
+        <p>999</p>
+    </div>
+    <script>
+        function Foo() {//函数声明
+            getName = function () { console.log(1) };//函数表达式，函数表达式没有函数提升，左边的变量会提升，但是右边的赋值表达式没有提升
+            return this;
+        }
+        Foo.getName = function () { console.log(2) };//静态方法
+        Foo.prototype.getName = function () { console.log(3) };//原型链上，公有方法
+        var getName = function () { console.log(4) };
+        function getName() { console.log(5) }
+
+        //请写出以下输出结果：
+        Foo.getName();//2 访问函数上存储的静态属性
+        getName();//4
+        Foo().getName(); //1 先执行了Foo函数，然后调用Foo函数的返回值对象的getName属性函数。相当于执行window.getName()
+        getName(); //1  ，因为执行
+        new Foo.getName();
+        new Foo().getName();
+        new new Foo().getName();
+    </script>
+</body>
+
+</html>
+<!--
+     1.Javascript 中函数声明和函数表达式是存在区别的，函数声明在JS解析时进行函数提升，
+     因此在同一个作用域内，不管函数声明在哪里定义，该函数都可以进行调用。
+     而函数表达式的值是在JS运行时确定，并且在表达式赋值完成后，该函数才能调用。
+     2.函数声明可以先调用再声明，而函数表达式必须先定义再调用 
+
+     3.函数声明：函数名在自身作用域和父作用域内是可获取的 
+       函数表达式：函数名（如果有的话）在作用域外是不可获取的
+
+    4.函数声明提升
+解释： 
+- 函数声明和函数变量通常会被 JavaScript 解释器移（‘hoisted’）到当前作用域顶部 
+- 执行 JavaScript 过程中，
+有 Context（ECMA 5 将之分解为 LexicalEnvironment词汇环境、VariableEnvironment 变量环境和 ThisBinding绑定）
+和 Process（一系列按序调用的语句）两个概念。
+当程序进入执行域时，Declaration 会造成 VariableEnvironment。
+它们不同于 Statement（比如 return），也不遵循 Statement 的运行规则。
+
+Function Expression 会被提升吗？ 
+如
+
+var bar = function() {
+    return 3;
+};
+等号左边的（var bar）是 Variable Declaration。Variable Declaration 会被提升，
+但是 Assignment Expression（赋值表达式）不会。
+所以当 bar 提升时，解释器会这样初始化：var bar = undefined。而函数定义本身不会被提升。
+
+    -->

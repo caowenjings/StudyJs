@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>homework-web</title>
+</head>
+
+<body>
+    <div>
+        <p>999</p>
+    </div>
+    <script>
+        /*
+        1.原型：是一个可以被复制的对象，一个对象模版。
+         通过原型创建出来的新实例，会功效原型的属性和方法
+        */
+
+        function Person(name) { // 1.创建原型
+            this.name = name
+        }
+        Person.prototype.sayName = function () {// 2.原型的方法
+            console.log("hello" + this.name)
+        }
+        var person1 = new Person("张三")//3.实例化创建新的原型对象，新的原型对象会共享原型的属性和方法
+        person1.sayName();
+
+
+        person1.sayAge = function () {//4.为新对象实例添加方法
+            console.log(18);
+        }
+        var person2 = new Person("李四")
+        person1.sayAge();//18     5.新实例之间的属性，方法是独立的
+        person2.sayAge();//error
+
+    </script>
+</body>
+
+</html>

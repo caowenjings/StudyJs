@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>homework-web</title>
+    <style type="text/css">
+
+    </style>
+</head>
+
+<body>
+
+    <div id="demo">
+
+    </div>
+
+    <script>
+        // 1.递归：如果一个函数在内部可以调用本身，那么这个函数是递归函数
+        /*函数内部自己调用自己
+        递归函数的效果跟循环一样，必须加退出条件，不然就会死递归
+        */
+
+        var num = 1
+        function add() {
+            if (num > 6) {
+                return
+            }
+            console.log('打印6次');
+            num++;
+            add()
+        }
+        // add()
+
+        // 2.递归求数学题 求1～n的阶乘 1*2*3*4*n
+        function fn(n) {
+            if (n == 1) {
+                return 1;
+            }
+            return n * fn(n - 1)
+        }
+        console.log(fn(3))
+
+        //3.裴波那契数列
+        //1,1,2,3,5,8,13,21,34..... n,求第n个数字是多少
+        //只需要知道数字的前两个数是多少
+
+        function fb(n) {
+            if (n == 1 || n == 2) {
+                return 1;
+            }
+            return fb(n - 1) + fb(n - 2);
+        }
+        console.log("fb:" + fb(8))
+        console.log("fb:" + fb(9))
+
+        //4.利用递归遍历数组 根据输入id，返回相应的数据对象
+        let jsonData = [
+            {
+                id: 1,
+                name: '家电',
+                goods: [
+                    { id: 11, gname: '冰箱' },
+                    { id: 12, gname: '洗衣机' },
+                    { id: 13, gname: '风扇' }]
+            },
+            {
+                id: 2,
+                name: '服饰',
+            },
+        ]
+
+        function getNum(json, id) {
+            let o = {}
+            json.forEach(item => {
+                if (item.id == id) {
+                    o = item
+                } else if (item.goods && item.goods.length > 0) {
+                    o = getNum(item.goods, id);
+                }
+            });
+            return o
+        }
+        console.log(getNum(jsonData, 1))
+        console.log(getNum(jsonData, 11))
+
+
+        let jsonData1 = [
+            {
+                id: 1,
+                name: '家电',
+                goods: [
+                    {
+                        id: 11, gname: '冰箱',
+                        goods: [
+                            { id: 111, gname: '海尔' },
+                        ]
+                    },
+                    { id: 12, gname: '洗衣机' },
+                    { id: 13, gname: '风扇' }
+                ]
+            },
+            {
+                id: 2,
+                name: '服饰',
+            },
+        ]
+        console.log(getNum(jsonData1, 111))
+
+
+        //5.小青蛙跳台阶，小青蛙一次可以跳1级，也可跳2级。请问n阶可以有多少总跳法。
+
+        /*
+        1:1
+        2:2
+        3:3
+        4:5
+        */
+        function jump(n) {
+            if (n == 1) {
+                return 1;
+            }
+            if (n == 2) {
+                return 2;
+            }
+            return jump(n - 2) + jump(n - 1)
+        }
+        console.log('jump:' + jump(4))
+        console.log('jump:' + jump(5))
+
+        //求：1，2，3，4,5 ,6,7,8,9到n的和
+
+        function calculationAdd(n) {
+            if (n == 1) {
+                return 1
+            }
+            return n + calculationAdd(n - 1)
+        }
+        console.log("calculationAdd:" + calculationAdd(3))
+        console.log("calculationAdd:" + calculationAdd(4))
+
+
+
+        // 深拷贝
+        function clone(o) {
+            var temp = {}
+            for (var key in o) {
+                if (typeof o[key] == 'object') {
+                    temp[key] = clone(o[key])
+                } else {
+                    temp[key] = o[key]
+                }
+            }
+            return temp
+        }
+
+
+
+
+
+
+    </script>
+</body>
+
+</html>

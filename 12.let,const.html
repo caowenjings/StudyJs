@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>homework-web</title>
+  <style type="text/css">
+
+  </style>
+</head>
+
+<body>
+
+  <div id="demo">
+  </div>
+
+  <script>
+    /*
+    1.块作用域 {} (一对{} 产生的)
+    ES5 中作用域有：全局作用域、函数作用域。没有块作用域的概念。
+    ES6 中新增了块级作用域。块作用域由 { } 包括，if语句和 for语句里面的{ } 也属于块作用域。
+    * /
+
+
+    // 1.let
+    /*
+    let 声明变量只处于块级作用域有效 (一对{} 产生的)
+    let 不存在变量提升（var中可以先使用再声明，let不行）
+    let 暂时性死区
+    */
+
+    //1.声明变量只处于块级作用域有效 (一对{} 产生的)
+    function test() {
+      if (true) {
+        let a = 1;
+        console.log(a)
+      };
+      console.log(a)
+    }
+    // test()
+
+    //2.let 不存在变量提升（var中可以先使用再声明，let不行）
+    let b = 3;
+    function test1() {
+      console.log(b)
+      let b = 2;
+    }
+    // test1();
+
+    //3. let 暂时性死区
+    let c = 3;
+    function test2() {
+      c = 3;
+      let c = 2;
+      console.log(c);
+    }
+    // test2();
+
+    // 使用
+    /*
+    i 是全局作用域，函数执行时输出的是全局作用域的值
+    */
+    function use() {
+      let arr = []
+      for (var i = 0; i < 5; i++) {
+        arr[i] = function s() {
+          console.log(i)
+        }
+      }
+      arr[0]();
+      arr[1]();
+    }
+    // use()；
+
+    /*
+    每循环一次就会产生一个块级作用域，每个块级作用域的i变量值不同，
+    函数执行时就会区寻找i
+    */
+    function use1() {
+      let arr = []
+      for (let i = 0; i < 5; i++) {
+        arr[i] = function s() {
+          console.log(i)
+        }
+      }
+      arr[0]();
+      arr[1]();
+    }
+    use1()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  </script>
+
+</body>
+
+</html>

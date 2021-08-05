@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>homework-web</title>
+</head>
+
+<body>
+    <div></div>
+    <script>
+        var funcTest = function () {
+            console.log(222)
+        }
+        function funcTest() {
+            console.log(111)
+        }
+        funcTest()//222
+
+        // js  解析
+        var funcTest = undefined;
+        function funcTest() {
+            console.log(111)
+        }
+        funcTest == function () {
+            console.log(222)
+        }
+        funcTest()//222
+
+
+
+
+        //1.function variable（函数变量）通常会被 js 解释器移（‘hoisted'）到当前作用域顶部
+        //  function declaration 被提升时，整个函数体都会随之提升
+        /*
+        function foo() {
+            function bar() { console.log(3); return 3; }
+            return bar();
+            function bar() { console.log(8); return 8; }
+        }
+        console.log(foo()) //8,8
+       
+ 
+        // js解释后是这样的
+        function foo() {
+            //define bar once
+            function bar() {
+                return 3;
+            }
+            //重新定义it
+            function bar() {
+                return 8;
+            }
+            //返回它的调用
+            return bar(); //8
+        }
+        console.log(foo())
+         */
+
+
+
+        /*2.
+          function foo() {
+              var bar = function () {
+                  return 3;
+              };
+              return bar();
+              var bar = function () {
+                  return 8;
+              };
+          }
+          console.log(foo());//3
+          
+       // js解释后是这样的
+        function foo() {
+            var bar = undefined;
+            var bar = undefined;
+            bar = function () {
+                return 3;
+            };
+            return bar();
+        }
+        console.log(foo());//3
+ 
+         */
+        // 3.foo 函数被提升了
+        console.log(foo());//3
+        function foo() {
+            var bar = function () {
+                return 3;
+            };
+            return bar();
+            var bar = function () {
+                return 8;
+            };
+        }
+
+        /*4.
+        function foo() {
+            return bar();
+            var bar = function () {
+                return 3;
+            };
+            var bar = function () {
+                return 8;
+            };
+        }
+        console.log(foo());//Type Error: bar is not a function
+        */
+    </script>
+</body>
+
+</html>
+<!--
+     1.Javascript 中函数声明和函数表达式是存在区别的，函数声明在JS解析时进行函数提升，
+     因此在同一个作用域内，不管函数声明在哪里定义，该函数都可以进行调用。
+     而函数表达式的值是在JS运行时确定，并且在表达式赋值完成后，该函数才能调用。
+     2.函数声明可以先调用再声明，而函数表达式必须先定义再调用 
+    -->

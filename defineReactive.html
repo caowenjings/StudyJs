@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>homework-web</title>
+</head>
+
+<body>
+    <div>
+        <p>999</p>
+    </div>
+    <script>
+        // 这是一个管理依赖的类，用来收集，删除，通知依赖
+        // class dep {
+        //     constructor() {
+        //         this.subs = []
+        //     }
+        //     addSub(sub) {
+        //         this.subs.push(sub)
+        //     }
+        //     removeSub(sub) {
+        //         remove(this.sub, sub)
+        //     }
+        //     depend() {
+        //         if (window.target) {
+        //             this.addSub(window.target)
+        //         }
+        //     }
+        //     notify() {
+        //         const subs = this.subs.slice()
+        //         for (let i = 0, l = subs.length; i < 1; i++) {
+        //             subs[i].update()
+        //         }
+        //     }
+        // }
+
+        function defineReactive(obj, key, val) {
+            let dep = [];//用于收集当前的依赖
+            Object.defineProperty(obj, key, {
+                enumerable: true,//可枚举的
+                configurable: true,//可配置
+                set: function (newVal) {
+                    if (val == newVal) {
+                        return
+                    }
+                    for (let i = 0, len = dep.length; i < len; i++) {
+                        dep[i](newVal, val)
+                    }
+                    val = newVal
+                },
+                get: function () {
+                    dep.push(window.traget);
+                    return val
+                }
+            })
+        }
+
+
+
+    </script>
+</body>
+
+</html>

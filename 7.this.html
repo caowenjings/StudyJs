@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>homework-web</title>
+    <style type="text/css">
+
+    </style>
+</head>
+
+<body>
+
+    <div id="demo">
+
+    </div>
+
+    <script>
+        // 1.全局上下文中：this指向 全局对象window
+        // console.log(this)
+        //2.函数上下文：this指向 当前函数所属的对象
+
+        var obj = {
+            name: 1,
+            fn: function () {
+                console.log(this)//this指的是obj
+            }
+        }
+        // obj.fn()
+
+        function fn2() {
+            console.log(this);//此时看fn2函数属于哪个对象，this就指向哪个
+        }
+        //fn2() // fn2() == window.fn2()
+
+        window.setTimeout(function () {
+            console.log(this)
+        })
+
+        // 3.构造函数（在函数前面加new）：new关键字会让this指向改变，并成为当前函数的返回值
+
+        function Star(name) {
+            console.log(this) //this指向 cao 这个实例对象
+        }
+        Star.prototype.sing = function () {
+            // 原型对象的this也指向这个实例对象
+        }
+        // let cao = new Star("cao");
+
+        function test() {
+            console.log(this)
+            alert(this.x);
+        }
+        var o = {};
+        o.x = 2;
+        o.m = test;
+        o.m(); //1
+    </script>
+</body>
+
+</html>

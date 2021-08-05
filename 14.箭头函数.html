@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>homework-web</title>
+  <style type="text/css">
+
+  </style>
+</head>
+
+<body>
+
+  <div id="demo">
+  </div>
+
+  <script>
+    // 1.箭头函数不会创建自己的this，会从作用域链的上一层继承this
+
+
+    var obj = {
+      a: 10,
+      b: () => {
+        console.log("b：" + this.a); // undefined
+        console.log(this); // Window
+      },
+      c: function () {
+        console.log("c：" + this.a); // 10
+        console.log(this); // {a: 10, b: ƒ, c: ƒ}
+      }
+    }
+    obj.b();// 箭头函数与obj指向一致 是window
+    obj.c();//this指向obj
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  </script>
+
+</body>
+
+</html>

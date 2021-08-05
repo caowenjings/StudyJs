@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>homework-web</title>
+</head>
+
+<body>
+    <div>
+        <p>999</p>
+    </div>
+    <script>
+        // 1.getter是获取属性值，setter是设置属性值，
+        // 2.getter不带任何参数。setter设置键值，setter值以参数的形式传递，在setter函数体中，一切的return都是无效的，当出现setter函数时，那这个属性是只写的。当只有getter函数时，那这个属性是只读的。同时拥有setter、getter函数，这个属性可读可写。
+
+        function simple() {
+            var p = {
+                _age: 18,
+                get age() {
+                    return this._age;
+                },
+                set age(val) {
+                    this._age = val;
+                }
+            }
+            console.log(p.age) // 18 只触发 get方法
+            console.log(p.age = 20)  // 20 只触发set方法
+            console.log(p.age)  // 20 执行get方法
+        }
+        // simple();
+
+        // 1.如果添加了条件，如果只有符合条件才能去修改值
+        function simple1() {
+            let _age = 10
+            class Animal {
+                constructor(type) {
+                    this.type = type
+                }
+                get age() {
+                    return _age;
+                }
+                set age(val) {
+                    // 可以加上条件才能修改内容的阻止
+                    if (val > 10) _age = val;
+                }
+            }
+            let dog = new Animal('cat')
+            console.log(dog.age) // 10 如果没有get，不能直接获取函数里面的属性值，会是undefined
+            dog.age = 9
+            console.log(dog.age) // 10 不符合条件没有修改成功
+            dog.age = 12
+            console.log(dog.age) // 12 符合条件修改成功
+        }
+        // simple1();
+
+        //学习链接： https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Object/defineProperty
+        // Object.defineProperty
+
+        function simple2() {
+            var o = {}; // 创建一个新对象
+
+            // 在对象中添加一个属性与数据描述符的示例
+            Object.defineProperty(o, "a", {
+                value: 37,
+                writable: true,//能被运算符改变
+                enumerable: true,//显示
+                configurable: true// 可被修改，删除
+            });
+            console.log(o.a) //37 对象 o 拥有了属性 a，值为 37
+
+
+            // 在对象中添加一个设置了存取描述符属性的示例
+            var bValue = 38;
+            Object.defineProperty(o, "b", {
+                get() {  //缩写等价于： get : function() { return bValue; },
+                    return bValue;
+                },
+                set(newValue) { //缩写等价于： set : function(newValue) { bValue = newValue; },
+                    bValue = newValue;
+                },
+                enumerable: true,
+                configurable: true
+            });
+            console.log(o.b)// 对象 o 拥有了属性 b，值为 38
+        }
+        simple2();
+    </script>
+</body>
+
+</html>

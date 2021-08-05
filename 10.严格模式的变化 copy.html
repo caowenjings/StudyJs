@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>homework-web</title>
+    <style type="text/css">
+
+    </style>
+</head>
+
+<body>
+
+    <div id="demo">
+    </div>
+
+    <script>
+        /*
+        1.变量规定
+          1.变量名必须先声明再使用
+          2.禁止删除已经声明好的变量
+        2.严格模式下的this指向问题
+          1.以前在全局作用域函数中this指向windom
+            在严格模式下全局作用域函数中this指向undefined
+          2.以前构造函数没有加new，当普通函数调用，this指向全局
+            在严格模式下，不加new调用，this报错
+          3.定时器里面的this还是指向window
+        3.函数变化
+          1.函数中不能有重名的参数
+          2.严格模式下不允许在非函数代码快中声明函数：比如 if，for中
+        4.arguments对象的限制
+          1.不允许对arguments赋值
+          2.arguments不再追踪参数的变化
+          */
+        function test() {
+            'use strict'
+            num = 10
+            console.log(num);
+        }
+        // test()
+
+        function test1() {
+            // 'use strict'
+            var num1 = 10
+            console.log(num1);
+            delete num1;
+        }
+        // test1()
+
+        //1.以前在全局作用域函数中this指向windom；在严格模式下全局作用域函数中this指向undefined
+        function test2() {
+            'use strict'
+            console.log(this)
+        }
+        // test2()
+
+        // 2.以前构造函数没有加new，当普通函数调用，this指向全局；在严格模式下，不加new调用，this报错
+
+        function Star() {
+            'use strict'
+            this.sex = "男"
+        }
+        // Star();//没有加new，当普通函数调用
+        // console.log(window.sex)
+
+        // 3.严格模式下函数中不能有重名的参数
+        function add(a, a) {
+            // 'use strict'
+            console.log(a + a)
+        }
+        // add(1, 2)
+
+        //4.严格模式下不允许在非函数代码快中声明函数：比如 if，for中
+
+        //5.不允许对arguments赋值
+        function test5() {
+            // "use strict";
+            arguments++; // 语法错误
+            function arguments() { } // 语法错误
+            var f = new Function("arguments", "'use strict'; return 17;"); // 语法错误
+        }
+
+
+        function f(a) {
+            console.log(arguments)
+            a = 2;
+            return [a, arguments[0]];
+        }
+        console.log(f(1))// 正常模式为[2,2]
+        function f2(a) {
+            "use strict";
+            a = 2;
+            return [a, arguments[0]];
+        }
+        console.log(f2(1)) // 严格模式为[2,1]
+
+
+
+
+    </script>
+
+    <script>
+
+
+    </script>
+
+
+</body>
+
+</html>
