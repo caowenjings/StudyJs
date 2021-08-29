@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>homework-web</title>
+  <style type="text/css">
+
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+
+  </div>
+</body>
+<script>
+  /* 函数柯里化:
+     在函数调用时可以只传递一部分参数进行调用，函数会返回一个新函数去处理剩下的参数，
+  */
+
+  function fn(x, y) {
+    return function (y) {
+      console.log(x + y);
+    };
+  };
+  var fn_ = fn(2);
+  fn_(1); //2
+
+  fn(1)(1); //2
+
+
+
+
+</script>
+
+</html>

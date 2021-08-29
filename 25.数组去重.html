@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>homework-web</title>
+  <style type="text/css">
+
+  </style>
+</head>
+
+<body>
+
+  <div id="demo">
+    jdjjddjjdjdjdjjdjjdj
+  </div>
+</body>
+<script>
+  //数组去重
+
+  //1.for循环 + indexof
+  function f1() {
+    let arr = [1, 3, 6, 6, 8, 8, 9, 4, 5, 4, 9];
+    let newArr = []
+    for (var i = 0, len = arr.length; i < len; i++) {
+      if (newArr.indexOf(arr[i]) == -1) {
+        newArr.push(arr[i])
+      }
+    }
+    return newArr;
+  }
+  console.log(30, f1());
+
+  //2.两个for循环,在内循环里面比较值
+  function f2() {
+    let arr = [1, 3, 6, 6, 8, 8, 9, 4, 5, 4, 9];
+    let newArr = arr;
+    for (let i = 0, len = newArr.length; i < len; i++) {
+      for (let j = i + 1; j < len; j++) {
+        if (newArr[i] == newArr[j]) {
+          newArr.splice(j, 1);
+          len--;
+          j--;
+        }
+      }
+    }
+    return newArr;
+  }
+  console.log(42, f2());
+
+  //3.filter+indexof
+
+  function f3() {
+    let arr = [1, 3, 6, 6, 8, 8, 9, 4, 5, 4, 9];
+    let newArr = arr;
+    return newArr.filter((item, index) => {
+      return newArr.indexOf(item) == index
+    })
+  }
+  console.log(55, f3())
+
+
+  //4.利用sort()排序方法，然后根据排序后的结果进行遍历及相邻元素比对。
+  function f4() {
+    let arr = [1, 3, 6, 6, 8, 8, 9, 4, 5, 4, 9];
+    let newArr = arr.sort();
+    for (var i = 0, len = newArr.length; i < len; i++) {
+      if (newArr[i] == newArr[i + 1]) {
+        newArr.splice(i, 1)
+      }
+    }
+    return newArr;
+  }
+  console.log(64, f4())
+
+  function f5() {
+    let arr = [1, 3, 6, 6, 8, 8, 9, 4, 5, 4, 9];
+    let newArr = arr.sort();
+    return newArr.filter((item, index) => {
+      return newArr[index] != newArr[index + 1]
+    })
+  }
+  console.log(83, f5())
+
+  //5....new Set(arr)
+  function f6() {
+    let arr = [1, 3, 6, 6, 8, 8, 9, 4, 5, 4, 9];
+    return [...new Set(arr)];
+  }
+  console.log(88, f6());
+
+  //6. Array.from(new Set(arr))
+  function f7() {
+    let arr = [1, 3, 6, 6, 8, 8, 9, 4, 5, 4, 9];
+    return Array.from(new Set(arr));
+  }
+  console.log(96, f7());
+
+</script>
+
+</html>

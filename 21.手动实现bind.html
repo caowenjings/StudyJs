@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>homework-web</title>
+  <style type="text/css">
+  </style>
+</head>
+
+<body>
+  <script>
+    /*
+    https://www.cnblogs.com/echolun/p/12178655.html
+    1.bind实现
+      改变this指向，返回新函数，新的函数this不能再被改变了
+    */
+
+    //1.1 bind使用
+    var name = "caoenjing";
+    var obj = { name: 'caowenjing1' };
+    function getName(a, b) {
+      console.log(a + b + this.name)
+    }
+    function getSimpleName() {
+      console.log(this.name)
+    }
+
+    getName("我是", 2);
+    getName.call(obj, "我是", 3);
+    let s = getName.bind(obj, "我是", 4);
+    s();
+
+    /*
+    1.2 模仿bind 改变this
+        返回一个新函数，改变this
+    */
+
+    Function.prototype.bind_ = function (obj) {
+      var that = this;
+      return function () {
+        that.apply(obj)
+      }
+    }
+    getSimpleName.bind_(obj)();
+
+    /*
+    1.3 模仿bind 改变this,接受参数
+        返回一个新函数，改变this
+    */
+    Function.prototype.bind1_ = function (obj) {
+      var that = this;
+      let arr = [];
+      // var arr = Array.prototype.slice.call(arguments, 1);
+      for (var i = 1, len = arguments.length; i < len; i++) {
+        arr.push(arguments[i])
+      }
+      return function () {
+        that.apply(obj, arr)
+      }
+    }
+    getName.bind1_(obj, "我是", 5)();
+
+    /*1.4模仿bind 有函数柯里化
+     在调用bind时可以先传递部分参数，在调用返回的bound时可以补全剩余参数
+     */
+    Function.prototype.bind3_ = function (obj) {
+      var that = this;
+      var arr = Array.prototype.slice.call(arguments, 1);
+      return function () {
+        var params = Array.prototype.slice.call(arguments);
+        that.apply(obj, arr.concat(params))
+      }
+    }
+
+    Function.prototype.bind2_ = function (obj) {
+      var that = this;
+      let arr = [];
+      for (var i = 1, len = arguments.length; i < len; i++) {
+        arr.push(arguments[i])
+      }
+      return function () {
+        for (var i = 0, len = arguments.length; i < len; i++) {
+          arr.push(arguments[i])
+        }
+        that.apply(obj, arr)
+      }
+    }
+    function getNamebind2_(a, b, c) {
+      console.log(a + b + this.name + c)
+    }
+    getNamebind2_.bind2_(obj, "我是", 9)(6);
+
+    /*
+    1.5 模版bind 使用new
+    通过bind返回的boundFunction函数也能通过new运算符构造
+    boundFunction，new构造时会丢失原本绑定的this
+    返回的实例还是会继承构造函数的构造器属性与原型属性，并且能正常接收参数
+
+    调用就分为两种，一种是new指向实例本身，二种是普通调用
+    用constructor来判断: constructor永远指向构造函数本身  实例.constructor==函数 就是new
+     
+     //如果newFun是被作为构造函数调用的话，this指向调用者,否则his指向我们传入的newThis
+        
+    */
+    Function.prototype.bind5_ = function (obj) {
+      var that = this;
+      let arr = [];
+      for (var i = 1, len = arguments.length; i < len; i++) {
+        arr.push(arguments[i])
+      }
+
+      let newFun = function () {
+        for (var i = 0, len = arguments.length; i < len; i++) {
+          arr.push(arguments[i])
+        }
+        that.apply(this.constructor === that ? this : obj, arr)//虽然new的是newFun方法，本质上执行的还是fn，毕竟bound自身并没有构造器属性
+      }
+      newFun.prototype = that.prototype;//原型链继承
+      return newFun;
+    }
+    /*
+       1.6 模版bind 使用中间函数来转一下
+       */
+    Function.prototype.bind6_ = function (obj) {
+      var that = this;//this指向的是调用bind6_的函数,this指向有可能改变，先绑定this
+      let arr = [];
+      var fn_ = function () { };  //创建中介函数
+      arr = [].slice.call(arguments, 1);
+
+      let newFun = function () {
+        for (var i = 0, len = arguments.length; i < len; i++) {
+          arr.push(arguments[i])
+        }
+
+        that.apply(this.constructor === that ? this : obj, arr)//虽然new的是bound方法，本质上执行的还是fn，毕竟bound自身并没有构造器属性，这点关系还是需要理清。
+
+      }
+
+      fn_.prototype = that.prototype;
+      newFun.prototype = new fn_();//原型链继承
+      return newFun;
+    }
+
+
+
+
+
+  </script>
+
+</html>

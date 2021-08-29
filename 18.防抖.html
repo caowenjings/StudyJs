@@ -58,28 +58,39 @@
   const handler = debounce(function () {
     console.log('防抖click!');
   });
-
   document.getElementById('button').addEventListener('click', handler);
-
-
-
-
-
 
   function debounce1(fn, wait) {
     var timeout = null;      //定义一个定时器
     return function () {
       if (timeout !== null)
         clearTimeout(timeout);  //清除这个定时器
-      timeout = setTimeout(fn, wait);
+      timeout = setTimeout(function () {
+        func.apply(this, arguments);
+      }, wait);
     }
   }
+
+
+  function debounce2(func, wait = 500) {
+    let timeout;
+    return function () {
+      clearTimeout(timeout);
+      timeout = setTimeout(() => {
+        func.apply(this, arguments);
+      }, wait);
+    };
+  }
+
   // 处理函数
   function handle() {
     console.log(Math.random());
   }
   // 滚动事件
   window.addEventListener('scroll', debounce1(handle, 1000));
+
+
+
 
 
 

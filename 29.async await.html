@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>homework-web</title>
+  <style type="text/css">
+  </style>
+</head>
+
+<body>
+
+  <div id="demo"></div>
+</body>
+<script>
+  /*
+   1.async await
+     基于Promise的解决异步的最终方案
+  */
+  /*1. async基础语法
+       async是一个加在函数前的修饰符，
+       被async定义的函数会默认返回一个Promise对象resolve的值,可直接使用then
+  */
+  async function fun() {
+    console.log(1);
+    return 2;
+  }
+  fun().then(val => {
+    console.log(val) // 1,2
+  })
+
+  async function fun1() {
+    console.log('Promise');
+    return new Promise(function (resolve, reject) {
+      console.log('Promise1');
+      resolve('Promise2')
+    })
+  }
+  fun1().then(val => {
+    console.log(val);
+  })
+  // Promise Promise1 Promise2
+
+  /*
+  2.await 也是一个修饰符，只能放在async定义的函数内。可以理解为等待。
+  await 修饰的如果是Promise对象：可以获取Promise中返回的内容（resolve或reject的参数），且取到值后语句才会往下执行；
+             如果不是Promise对象：当做await表达式的结果。
+  */
+
+  async function fun2() {
+    let a = await 52;
+    let b = 53;
+    let c = await new Promise((resolve, reject) => {
+      // setTimeout(function () {
+
+      // }, 3000)
+      resolve('time')
+    })
+
+
+    console.log(544, a, b, c)
+  }
+
+  fun2()
+
+
+
+
+
+</script>
+
+</html>

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>homework-web</title>
+  <style type="text/css">
+  </style>
+</head>
+
+<body>
+
+  <div id="demo"></div>
+</body>
+<script>
+  /*
+  new操作做了什么：1.创建了一个新对象
+                 2.讲函数的this指向这个新对象
+                 3.执行构造函数的代码，给新对象添加属性，变量
+                 4.新建的对象作为返回值返回
+  */
+
+  function myNew(Fun, ...args) {
+    let newObj = {};//1.创建对象
+    newObj.__proto__ = Fun.prototype;//2.把Parent的this指向target
+    const res = Fun.apply(newObj, args);//3.执行parent的代码为target添加属性,如果构造函数有返回结果，则接收
+    if (res instanceof Object) {
+      return res;
+    }
+    return newObj
+  }
+
+  function Person(name) {
+    this.name = name
+  }
+  var f = new Person('zhangsan');
+
+  var son = myNew(Person, 'xiaoxiao')
+  console.log(f.name)
+  console.log(son.name)
+</script>
+
+</html>

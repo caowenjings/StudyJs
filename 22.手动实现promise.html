@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>homework-web</title>
+  <style type="text/css">
+  </style>
+</head>
+
+<body>
+
+  <div id="demo"></div>
+</body>
+<script>
+  /*
+  https://blog.csdn.net/qq_39816673/article/details/88591495
+  解释：then的链式反应传值这一步还没有解决好，下次继续
+  
+  1.手动实现promise
+  promise是一个对象，保存着异步操作的结果，解决了会掉地狱的问题
+
+  三个状态： Pending(进行中)，Fulfilled(已成功)，Rejected(已失败)
+           状态一旦发生变化就不会改变了
+
+  */
+  let s = new Promise((resolve, reject) => {
+    resolve()
+  });
+
+  /*1.模仿promise 改变状态
+   定义构造，接受一个函数作为参数，这个函数有两个参数，
+   这两个参数都是函数，分别是resolve和reject
+  */
+  function Promise_(fn) {
+    let that = this;
+    that.status = "penging";//状态
+    that.fulfilledValue = "";//状态置为fulfilled时候，传递的值
+    that.rejectValue = "";////状态置为rejected时候，传递的值
+
+    function resolve(value) {//成功
+      if (that.status == "penging") {
+        that.status = 'fulfilled';
+        that.fulfilledValue = value;
+      }
+    }
+    function reject(value) {//失败
+      if (that.status == "penging") {
+        that.status = 'rejected';
+        that.rejectValue = value;
+      }
+    }
+
+    try {
+      fn(resolve, reject);//执行函数是resolve/reject
+    }
+    catch (e) {
+      reject(e);
+    }
+  }
+
+  /*
+ 2. 定义原型上的then方法，
+  then方法提供两个回调函数，一个是成功的回调，一个是失败的回调,
+  这里需要注意，接收的必须是必须是函数。
+  onFulfilled 成功的回调
+  onRejected  失败的回调
+  */
+  Promise_.prototype.then = function (onFulfilled, onRejected) {
+    let that = this;
+    onFulfilled = typeof onFulfilled == "function" ? onFulfilled : function (param) { return param; }
+    onRejected = typeof onRejected == "function" ? onRejected : function (e) { throw e; }
+
+    switch (that.status) {
+      case "fulfilled":
+        setTimeout(() => {
+          onFulfilled(that.fulfilledValue);
+        })
+        break;
+      case "rejected":
+        setTimeout(() => {
+          onRejected(that.rejectValue);
+        })
+        break;
+    }
+  }
+
+  var promise = new Promise_((resolve, reject) => {
+    // resolve("promise");
+    setTimeout(() => {
+      resolve("promise")
+    })
+  }).then((data) => {
+    console.log(90, data)//promsie
+  })
+  console.log(92)
+
+  /*3.
+  setTimeout(() => { //状态会是一直penging
+      resolve("promise")
+  })
+  问题：resolve是异步情况时，在调用then的时候，状态还没有置为fulfilled或者rejected
+  解决方案：提供两个数组，分别用来存储成功和失败的回调，
+          等异步队列有结果返回时，就去循环所存的回调
+ */
+
+  function Promise2_(executor) {
+    let that = this;
+    that.status = "penging";//状态
+    that.onFullfilledArray = [];//成功的回调数组
+    that.onRejectedArray = []; //失败的回调数组
+    that.fulfilledValue = "";//状态置为fulfilled时候，传递的值
+    that.rejectValue = "";////状态置为rejected时候，传递的值
+
+    function resolve(value) {//成功
+      if (that.status == "penging") {
+        that.status = 'fulfilled';
+        that.fulfilledValue = value;
+        for (let fn of that.onFullfilledArray) {
+          fn();
+        }
+      }
+    }
+    function reject(value) {//失败
+      if (that.status == "penging") {
+        that.status = 'rejected';
+        that.rejectValue = value;
+        for (let fn of that.onRejectedArray) {
+          fn();
+        }
+      }
+    }
+    try {
+      executor(resolve, reject);//执行函数是resolve/reject
+    }
+    catch (e) {
+      reject(e);
+    }
+  }
+
+  Promise2_.prototype.then = function (onFulfilled, onRejected) {
+    let that = this;
+    onFulfilled = typeof onFulfilled == "function" ? onFulfilled : function (param) { return param; }
+    onRejected = typeof onRejected == "function" ? onRejected : function (e) { throw e; }
+
+    switch (that.status) {
+      case "penging":
+        that.onFullfilledArray.push(function () {
+          setTimeout(function () {
+            onFulfilled(that.fulfilledValue)
+          })
+        })
+        that.onRejectedArray.push(function () {
+          setTimeout(function () {
+            onRejected(that.fulfilledValue)
+          })
+        })
+        break;
+      case "fulfilled":
+        setTimeout(() => {
+          onFulfilled(that.fulfilledValue);
+        })
+        break;
+      case "rejected":
+        setTimeout(() => {
+          onRejected(that.rejectValue);
+        })
+        break;
+    }
+  }
+
+  var promise = new Promise2_((resolve, reject) => {
+    setTimeout(() => {
+      resolve("promise")
+    })
+  }).then((data) => {
+    console.log(177, data)//promsie
+  })
+  console.log(180)
+
+  /*
+  4.实现then的链式调用，所以then必须返回一个崭新的promise
+    使用递归
+  */
+  function Promise3_(executor) {
+    let that = this;
+    that.status = "penging";//状态
+    that.onFullfilledArray = [];//成功的回调数组
+    that.onRejectedArray = []; //失败的回调数组
+    that.fulfilledValue = "";//状态置为fulfilled时候，传递的值
+    that.rejectValue = "";////状态置为rejected时候，传递的值
+
+    function resolve(value) {//成功
+      if (that.status == "penging") {
+        that.status = 'fulfilled';
+        that.fulfilledValue = value;
+        for (let fn of that.onFullfilledArray) {
+          fn();
+        }
+      }
+    }
+    function reject(value) {//失败
+      if (that.status == "penging") {
+        that.status = 'rejected';
+        that.rejectValue = value;
+        for (let fn of that.onRejectedArray) {
+          fn();
+        }
+      }
+    }
+
+    try {
+      executor(resolve, reject);//执行函数是resolve/reject
+    }
+    catch (e) {
+      reject(e);
+    }
+  }
+  Promise3_.prototype.then = function (onFulfilled, onRejected) {
+    let promise2;
+    let that = this;
+    onFulfilled = typeof onFulfilled === "function" ? onFulfilled : function (param) { return param; };
+    onRejected = typeof onRejected === "function" ? onRejected : function (e) { throw e; }
+
+    switch (that.status) {
+      case "penging":
+        promise2 = new Promise3_(function (resolve, reject) {
+          that.onFullfilledArray.push(function () {
+            setTimeout(function () {
+              onFulfilled(that.fulfilledValue)
+            })
+          })
+          that.onRejectedArray.push(function () {
+            setTimeout(function () {
+              onRejected(that.fulfilledValue)
+            })
+          })
+        })
+        break;
+      case "fulfilled":
+        promise2 = new Promise3_(function (resolve, reject) {
+          setTimeout(() => {
+            onFulfilled(that.fulfilledValue);
+          })
+        })
+        break;
+      case "rejected":
+        promise2 = new Promise3_(function (resolve, reject) {
+          setTimeout(() => {
+            onRejected(that.rejectValue);
+          })
+        })
+        break;
+    }
+    return promise2;
+  }
+
+
+</script>
+
+</html>

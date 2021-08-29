@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>homework-web</title>
+  <style type="text/css">
+  </style>
+</head>
+
+<body>
+  <script>
+    var name = "caoenjing";
+    var obj = { name: 'caowenjing1' };
+    function getName(a, b) {
+      console.log(a + b + this.name)
+    }
+
+    //方法一
+    Function.prototype.apply_ = function (obj) {
+      obj = obj ? Object(obj) : window;
+      let arr = []
+      if (arguments.length > 1) {
+        arr = arguments[1];
+      }
+      obj.fn = this;
+      obj.fn(...arr);
+      delete obj.fn;
+    }
+
+    //方法二
+    Function.prototype.apply1_ = function (obj,) {
+      obj = obj ? Object(obj) : window;
+      let arr = arguments[1] ? arguments[1] : [];
+      let args = []
+      for (let i = 0, len = arr.length; i < len; i++) {
+        args.push('arr[' + i + ']')
+      }
+      obj.fn = this;
+      eval("obj.fn(" + args + ")");
+      delete obj.fn;
+    }
+
+
+
+    getName("我是", "2")
+    getName.apply_(obj, ["我是", "0"]);
+    getName.apply1_(obj, ["我是", "3"]);
+
+  </script>
+
+</html>

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>homework-web</title>
+  <style type="text/css">
+  </style>
+</head>
+
+<body>
+  <p>
+    <label for="">input1</label><input type="text" id="input1">
+  </p>
+  <p>
+    <label for="">input2</label>
+    <input type="text" id="input2">
+  </p>
+  <div>
+    <span> 我每次比input1的值加1:</span>
+    <span id="span"></span>
+  </div>
+  <div>
+    <span> 我每次比input2的值加5:</span>
+    <span id="span1"></span>
+  </div>
+</body>
+<script>
+  /*
+  1.实现双向数据绑定
+  */
+  var oInput1 = document.getElementById('input1');
+  var oInput2 = document.getElementById('input2');
+  var oSpan = document.getElementById('span');
+  var oSpan1 = document.getElementById('span1');
+  var obj = {};
+
+  Object.defineProperties(obj, {
+    val1: {
+      configurable: true,
+      get: function () {
+        oInput1.value = 0;
+        oSpan.innerHTML = 0;
+        return 0
+      },
+      set: function (newValue) {
+        console.log("set1")
+        oInput1.value = newValue;
+        if (newValue) {
+          oSpan.innerHTML = Number(newValue) + 1;
+        }
+      }
+    },
+
+    val2: {
+      configurable: true,
+      get: function () {
+        oInput2.value = 0;
+        oSpan1.innerHTML = 0;
+        return 0
+      },
+      set: function (newValue) {
+        console.log("set2")
+        oInput2.value = newValue;
+        if (newValue) {
+          oSpan1.innerHTML = Number(newValue) + 5
+        }
+      }
+    }
+  })
+
+  oInput1.value = obj.val1;
+  oInput2.value = obj.val2;
+  oInput1.addEventListener('keyup', function () {
+    obj.val1 = oInput1.value;
+  }, false)
+
+  oInput2.addEventListener('keyup', function () {
+    obj.val2 = oInput2.value;
+  }, false)
+
+
+
+
+
+</script>
+
+</html>

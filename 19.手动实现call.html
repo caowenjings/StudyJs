@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>homework-web</title>
+  <style type="text/css">
+  </style>
+</head>
+
+<body>
+  <script>
+    /*
+    1.call实现
+    */
+    //1.1简单使用call，改变this指向
+    var name = 'cao1';
+    var obj = {
+      name: 'cao2'
+    };
+    function fn() {
+      console.log(this.name);
+    };
+    fn(); //1
+    fn.call(obj); //2
+
+
+    //1.2简单模拟call，改变this指向
+    Function.prototype.call_ = function (obj) {
+      obj = obj ? Object(obj) : window;//判断是否为null或者undefined,同时考虑传递参数不是对象情况
+      obj.fn = this;//1.当前this指向的函数fn1。 给obj添加fn属性，然后将this赋予它
+      obj.fn();//2.执行方法
+      delete obj.fn;//3.删除属性，执行完不删除会导致obj上的属性越来越多
+    }
+    function fn1() {
+      console.log(this.name)
+    }
+
+    fn1(); //1
+    fn1.call_(obj); //2
+
+    /*
+    1.3模拟call，改变this指向，接受参数
+      arguments代指函数接收的所有参数，它是一个类数组，不能用Array的方法
+        第一位是this指向，后面的才是参数
+      eavl() 可以接受一个字符串str作为参数，并把这个参数作为脚本代码来执行
+    */
+
+    Function.prototype.call1_ = function (obj) {
+
+      console.log(52, arguments)//[0: {name: "cao2"},1,2,3]
+
+      var arr = []
+      for (var i = 1, len = arguments.length; i < len; i++) {
+        // arr.push(arguments[i])
+        arr.push("arguments[" + i + "]")
+      }
+      console.log(58, arr);// [1, 2, 3]
+      obj.fn = this;
+      eval("obj.fn(" + arr + ")");//2.执行方法  eval(string)会做运算  eval("var a=1");
+
+      delete obj.fn;
+    }
+    function fn2(a, b, c) {
+      console.log(a + b + c + this.name);
+    };
+    fn2.call1_(obj, 1, 2, 3);//数字不管加不加引号，作为函数参数都是可解析的
+    fn2.call1_(obj, "我的", "名字", "是");// 报错，因为传递的是字符串 args.push(arguments[i])这一步我们提前将字符串进行了解析 等于 eval("obj.fn(我的,名字,是)")
+
+  </script>
+
+</html>

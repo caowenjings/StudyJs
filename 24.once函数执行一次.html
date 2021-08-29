@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>homework-web</title>
+  <style type="text/css">
+  </style>
+</head>
+
+<body>
+
+  <div id="demo"></div>
+</body>
+<script>
+  function once(fun, args) {
+    var falg = true;
+    return function () {
+      if (falg) {
+        falg = false;
+        fun(args);
+      }
+    }
+  }
+  function getName(name) {
+    console.log(name)
+  }
+
+  getName = once(getName, "小朋友");
+  getName();
+
+</script>
+
+</html>

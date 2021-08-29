@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>homework-web</title>
+  <style type="text/css">
+
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+
+  </div>
+</body>
+<script>
+  /*
+  1.arguments
+    arguments 是一个类数组对象，是传给一个函数的参数列表
+  */
+
+  function fun() {
+    console.log(arguments);
+  }
+  fun("a", 0, { name: "cao" });//['a',0,{ foo: "Hello, arguments" }]
+
+  /*
+   2.1 arguments方法
+      arguments是类数组，有length属性，但没有数组的方法
+  */
+
+  function fun1() {
+    let len = arguments.length;//3
+    let newArr = arguments.push(1);//报错没有这个方法
+    let newArr1 = arguments.splice(1);//报错没有这个方法
+  }
+  //fun1("a", 0, { name: "cao" });//['a',0,{ foo: "Hello, arguments" }]
+
+  /*
+  2.2 arguments使用Array方法
+      1.转数组 Array.from（），[...arguments]
+      2.调用原声方法
+  */
+  //转数组 
+  function fun2() {
+    let len = arguments.length;
+    let newArr = Array.from(arguments);
+    console.log(newArr)
+  }
+  //fun2("a", 0, { name: "cao" });
+
+  function fun3() {
+    let newArr = [...arguments];
+    newArr.push(1)
+    console.log(newArr)
+  }
+  // fun3("a", 0, { name: "cao" });
+  //调用原声方法 
+  function fun4() {
+    let len = arguments.length;
+    let newArr = Array.prototype.slice.call(arguments);//用的数组原型
+    newArr.push(1)
+    console.log(newArr)
+  }
+  //fun4("a", 0, { name: "cao" });
+
+  function fun5() {
+    let len = arguments.length;
+    let newArr = [].slice.call(arguments);//用的数组
+    newArr.push(1);
+    console.log(newArr)
+  }
+  fun5("a", 0, { name: "cao" });
+
+  /*
+  3.箭头函数使用arguments
+  扩展运算符用三个点号表示，功能是把数组或类数组对象展开成一系列用逗号隔开的值
+  rest运算符也是三个点号，不过其功能与扩展运算符恰好相反，把逗号隔开的值序列组合成一个数组
+  */
+
+  let func = (...rest) => {
+    console.log(rest)
+  }
+  func(1, 2, 3)// //[1,2,3]
+
+</script>
+
+</html>
